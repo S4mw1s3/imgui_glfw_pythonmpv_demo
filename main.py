@@ -36,10 +36,6 @@ class VideoPlayer:
     gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
     gl.glBindFramebuffer(gl.GL_FRAMEBUFFER, 0)
 
-    self.playbackPos = (0,)
-    self.volume = (0,)
-    self.loop='inf'
-
     self.mpv = MPV(log_handler=print, loglevel='debug')
 
     def get_process_address(_, name):
@@ -66,7 +62,7 @@ class VideoPlayer:
 
     w,h = imgui.core.get_content_region_available()
     w=int(max(w,0))
-    h=int(max(h-85,0))
+    h=int(max(h - 30,0))
 
     if not self.open:
       imgui.end()
@@ -100,36 +96,6 @@ class VideoPlayer:
 
 
     imgui.push_item_width(-1)
-
-    changed, values = imgui.slider_float(
-        "##Playback Percentage", *self.playbackPos,
-        min_value=0.0, max_value=100.0,
-        format="Playback Percentage %.0f",
-        power=1.0
-    )
-
-    if changed and values:
-      try:
-        self.mpv.command('seek',values,'absolute-percent')
-      except:
-        pass
-      self.playbackPos = (values,)
-    elif self.mpv.percent_pos:
-      self.playbackPos = (self.mpv.percent_pos,)
-
-    changed, values = imgui.slider_float(
-        "##Volume", *self.volume,
-        min_value=0.0, max_value=100.0,
-        format="Volume %.0f",
-        power=1.0
-    )
-
-    if changed:
-      self.mpv.volume = values
-      self.volume = (values,)
-    elif self.mpv.volume:
-      self.volume = (self.mpv.volume,)
-
 
     imgui.end()
 
