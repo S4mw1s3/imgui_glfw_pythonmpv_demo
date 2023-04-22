@@ -8,7 +8,7 @@ import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
 import ctypes
-from mpv import MPV, MpvRenderContext, OpenGlCbGetProcAddrFn
+from mpv import MPV, MpvRenderContext, MpvGlGetProcAddressFn
 
 class VideoPlayer:
 
@@ -47,7 +47,7 @@ class VideoPlayer:
       address = glfw.get_proc_address(name.decode('utf8'))
       return ctypes.cast(address, ctypes.c_void_p).value
 
-    proc_addr_wrapper = OpenGlCbGetProcAddrFn(get_process_address)
+    proc_addr_wrapper = MpvGlGetProcAddressFn(get_process_address)
 
     self.ctx = MpvRenderContext(self.mpv, 'opengl', opengl_init_params={'get_proc_address': proc_addr_wrapper})
     
